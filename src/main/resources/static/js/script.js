@@ -1,5 +1,5 @@
 /* ==========================================
-   Efeitos Visuais 3D, Fundo Animado com Física, Luz Dinâmica e Dados Malucos
+   Efeitos Visuais 3D, Fundo Animado com Física, Desenho com Lápis e Luz Dinâmica
    ========================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -17,7 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let letters = word.toLowerCase().split('');
 
-        // Algoritmo Fisher-Yates para embaralhar letras
         for (let i = letters.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [letters[i], letters[j]] = [letters[j], letters[i]];
@@ -45,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     textNodes.push(node);
                 }
             } else {
-                if (node.nodeName !== 'SCRIPT' && node.nodeName !== 'STYLE' && node.nodeName !== 'NOSCRIPT' && !node.classList?.contains('light-switch-wrapper') && !node.classList?.contains('dice-btn-wrapper')) {
+                if (node.nodeName !== 'SCRIPT' && node.nodeName !== 'STYLE' && node.nodeName !== 'NOSCRIPT' && !node.classList?.contains('light-switch-wrapper') && !node.classList?.contains('dice-btn-wrapper') && !node.classList?.contains('speed-btn-wrapper') && !node.classList?.contains('direction-btn-wrapper') && !node.classList?.contains('voxel-btn-wrapper')) {
                     for (let child of node.childNodes) {
                         collectTextNodes(child);
                     }
@@ -91,8 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const elements = document.querySelectorAll(selector);
 
             elements.forEach(el => {
-                // Não altera os botões de controle do próprio footer
-                if (el.classList.contains('light-switch-wrapper') || el.classList.contains('dice-btn-wrapper') || el.closest('.light-switch-wrapper') || el.closest('.dice-btn-wrapper')) return;
+                if (el.classList.contains('light-switch-wrapper') || el.classList.contains('dice-btn-wrapper') || el.classList.contains('speed-btn-wrapper') || el.classList.contains('direction-btn-wrapper') || el.classList.contains('voxel-btn-wrapper') || el.closest('.light-switch-wrapper') || el.closest('.dice-btn-wrapper') || el.closest('.speed-btn-wrapper') || el.closest('.direction-btn-wrapper') || el.closest('.voxel-btn-wrapper')) return;
 
                 if (!el._origStyle) {
                     el._origStyle = {
@@ -119,13 +117,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     el.style.setProperty('background-color', hex1, 'important');
                     el.style.setProperty('border-color', hex2, 'important');
                 } else if (el.classList.contains('dashboard-card')) {
-                    // O card em si muda sua cor de fundo preenchida, borda e sombra em #HEX!
                     el.style.setProperty('background', hex1, 'important');
                     el.style.setProperty('background-color', hex1, 'important');
                     el.style.setProperty('border-color', hex2, 'important');
                     el.style.setProperty('box-shadow', `0 12px 30px ${hex2}`, 'important');
                 } else if (el.classList.contains('floating-notebook')) {
-                    // Cada caderno voador com hex individual
                     el.style.setProperty('color', hex1, 'important');
                     el.style.setProperty('filter', `drop-shadow(0 0 14px ${hex1})`, 'important');
                 } else if (['H1', 'H2', 'H3', 'H4', 'H5', 'P', 'SPAN', 'A', 'LABEL', 'I'].includes(el.tagName)) {
@@ -144,7 +140,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             isColorRandomized = true;
         } else {
-            // Restaura as cores originais exatas
             colorModifiedElements.forEach(el => {
                 if (el._origStyle) {
                     el.style.color = el._origStyle.color;
@@ -160,10 +155,283 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ------------------------------------------
-    // 3. Sistema de Luz Dinâmica & Controles do Footer
+    // 3. Sistema 3: Desenhar no Fundo com o Ícone de Lápis (Temporário e Virando Pó)
     // ------------------------------------------
+    let drawingCanvas = null;
+    let drawingCtx = null;
+    let isDrawingWithPencil = false;
+    let lastPencilPos = { x: 0, y: 0 };
+    let pencilStrokes = [];
+    let pencilDustParticles = [];
+    let isCanvasLoopRunning = false;
+
+    function initDrawingCanvas() {
+        if (drawingCanvas) return;
+        drawingCanvas = document.createElement('canvas');
+        drawingCanvas.id = 'bg-drawing-canvas';
+        drawingCanvas.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 10;
+        `;
+        document.body.prepend(drawingCanvas);
+
+        function resizeCanvas() {
+            drawingCanvas.width = window.innerWidth;
+            drawingCanvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        drawingCtx = drawingCanvas.getContext('2d');
+    }
+
+    function startCanvasAnimationLoop() {
+        if (!isCanvasLoopRunning) {
+            isCanvasLoopRunning = true;
+            requestAnimationFrame(updateCanvasFrame);
+        }
+    }
+
+    function drawLineSegment(x1, y1, x2, y2, color) {
+        initDrawingCanvas();
+        const strokeColor = color || '#38bdf8';
+
+        pencilStrokes.push({
+            x1, y1, x2, y2,
+            color: strokeColor,
+            maxLife: 60,
+            life: 60,
+            width: 5
+        });
+
+        for (let i = 0; i < 3; i++) {
+            pencilDustParticles.push({
+                x: x2 + (Math.random() - 0.5) * 8,
+                y: y2 + (Math.random() - 0.5) * 8,
+                vx: (Math.random() - 0.5) * 2,
+                vy: (Math.random() - 0.5) * 2 - 0.5,
+                size: Math.random() * 3 + 1,
+                color: strokeColor,
+                alpha: 1.0,
+                decay: 0.02 + Math.random() * 0.025
+            });
+        }
+
+        startCanvasAnimationLoop();
+    }
+
+    function updateCanvasFrame() {
+        if (!drawingCtx || !drawingCanvas) {
+            isCanvasLoopRunning = false;
+            return;
+        }
+
+        drawingCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+        let activeItems = false;
+
+        for (let i = pencilStrokes.length - 1; i >= 0; i--) {
+            const stroke = pencilStrokes[i];
+            stroke.life -= 1;
+            const alpha = Math.max(0, stroke.life / stroke.maxLife);
+
+            if (alpha <= 0) {
+                pencilStrokes.splice(i, 1);
+                continue;
+            }
+
+            activeItems = true;
+
+            if (stroke.life < stroke.maxLife * 0.6 && Math.random() < 0.25) {
+                const r = Math.random();
+                const px = stroke.x1 + (stroke.x2 - stroke.x1) * r;
+                const py = stroke.y1 + (stroke.y2 - stroke.y1) * r;
+                pencilDustParticles.push({
+                    x: px,
+                    y: py,
+                    vx: (Math.random() - 0.5) * 1.5,
+                    vy: (Math.random() - 0.5) * 1.5 - 0.3,
+                    size: Math.random() * 2.5 + 1,
+                    color: stroke.color,
+                    alpha: alpha,
+                    decay: 0.03 + Math.random() * 0.03
+                });
+            }
+
+            drawingCtx.save();
+            drawingCtx.globalAlpha = alpha;
+            drawingCtx.strokeStyle = stroke.color;
+            drawingCtx.lineWidth = stroke.width * (0.3 + 0.7 * alpha);
+            drawingCtx.lineCap = 'round';
+            drawingCtx.lineJoin = 'round';
+            drawingCtx.shadowBlur = 10 * alpha;
+            drawingCtx.shadowColor = stroke.color;
+
+            drawingCtx.beginPath();
+            drawingCtx.moveTo(stroke.x1, stroke.y1);
+            drawingCtx.lineTo(stroke.x2, stroke.y2);
+            drawingCtx.stroke();
+            drawingCtx.restore();
+        }
+
+        for (let i = pencilDustParticles.length - 1; i >= 0; i--) {
+            const p = pencilDustParticles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            p.alpha -= p.decay;
+
+            if (p.alpha <= 0) {
+                pencilDustParticles.splice(i, 1);
+                continue;
+            }
+
+            activeItems = true;
+
+            drawingCtx.save();
+            drawingCtx.globalAlpha = Math.max(0, p.alpha);
+            drawingCtx.fillStyle = p.color;
+            drawingCtx.shadowBlur = 6 * p.alpha;
+            drawingCtx.shadowColor = p.color;
+
+            drawingCtx.beginPath();
+            drawingCtx.arc(p.x, p.y, Math.max(0.1, p.size * p.alpha), 0, Math.PI * 2);
+            drawingCtx.fill();
+            drawingCtx.restore();
+        }
+
+        if (activeItems || isDrawingWithPencil) {
+            requestAnimationFrame(updateCanvasFrame);
+        } else {
+            isCanvasLoopRunning = false;
+        }
+    }
+
+    // ------------------------------------------
+    // 4. Sistema 4: Efeito 3D Voxel em CSS Avançado & Direção dos Ícones
+    // ------------------------------------------
+    let isVoxelModeActive = localStorage.getItem('bg_voxel_mode') === 'true';
+
+    function applyVoxelToElement(el) {
+        if (!el) return;
+        if (isVoxelModeActive) {
+            el.classList.add('voxel-mode');
+            let cube3d = el.querySelector('.voxel-cube-3d');
+            if (!cube3d) {
+                const fontClasses = Array.from(el.classList).filter(c => c.startsWith('fa-'));
+                const fontString = fontClasses.join(' ');
+                const computedSize = parseInt(el.style.fontSize) || 28;
+                const cubeSize = Math.max(24, Math.min(48, Math.round(computedSize * 1.3)));
+
+                el.style.setProperty('--cube-size', `${cubeSize}px`);
+
+                cube3d = document.createElement('div');
+                cube3d.className = 'voxel-cube-3d';
+
+                const faces = ['front', 'back', 'left', 'right', 'top', 'bottom'];
+                faces.forEach(faceName => {
+                    const face = document.createElement('div');
+                    face.className = `cube-face cube-${faceName}`;
+                    if (faceName === 'front' || faceName === 'back') {
+                        const icon = document.createElement('i');
+                        icon.className = `fas ${fontString}`;
+                        face.appendChild(icon);
+                    }
+                    cube3d.appendChild(face);
+                });
+
+                el._savedIconClasses = fontClasses;
+                fontClasses.forEach(c => el.classList.remove(c));
+                el.appendChild(cube3d);
+            }
+        } else {
+            el.classList.remove('voxel-mode');
+            const cube3d = el.querySelector('.voxel-cube-3d');
+            if (cube3d) {
+                cube3d.remove();
+            }
+            if (el._savedIconClasses) {
+                el._savedIconClasses.forEach(c => el.classList.add(c));
+            }
+        }
+    }
+
+    let landedVoxelBlocks = [];
+
+    function calculateVoxelLandingTop(currentLeft, cubeSize, currentEl) {
+        const footer = document.querySelector('footer');
+        let floorY = window.innerHeight - cubeSize - 8;
+        if (footer) {
+            const footerRect = footer.getBoundingClientRect();
+            floorY = footerRect.top - cubeSize + 2;
+        }
+        let highestTop = floorY;
+
+        landedVoxelBlocks.forEach(b => {
+            if (!b.element || !document.body.contains(b.element) || b.element === currentEl) return;
+            const bRect = b.element.getBoundingClientRect();
+            const centerDist = Math.abs((currentLeft + cubeSize / 2) - (bRect.left + bRect.width / 2));
+            if (centerDist < cubeSize * 0.85) {
+                if (bRect.top < highestTop) {
+                    highestTop = bRect.top;
+                }
+            }
+        });
+
+        return Math.max(10, highestTop - cubeSize + 2);
+    }
+
+    function updateVoxelModeState() {
+        localStorage.setItem('bg_voxel_mode', isVoxelModeActive);
+        const voxelBtn = document.getElementById('voxel-mode-trigger');
+        if (voxelBtn) {
+            voxelBtn.classList.toggle('active', isVoxelModeActive);
+        }
+
+        if (!isVoxelModeActive) {
+            landedVoxelBlocks.forEach(b => {
+                if (b.element && document.body.contains(b.element)) {
+                    b.element.classList.remove('accumulated-voxel', 'falling-to-stack');
+                    b.element.style.animation = '';
+                    resetNotebook(b.element, null);
+                }
+            });
+            landedVoxelBlocks = [];
+        }
+
+        const notebooks = document.querySelectorAll('.floating-notebook');
+        notebooks.forEach(el => applyVoxelToElement(el));
+    }
+
+    let bgDirectionAngle = parseInt(localStorage.getItem('bg_direction_angle')) || 0;
+
+    function updateBgDirection(angle) {
+        bgDirectionAngle = (angle % 360 + 360) % 360;
+        localStorage.setItem('bg_direction_angle', bgDirectionAngle);
+
+        const arrowIcon = document.getElementById('direction-arrow-icon');
+        if (arrowIcon) {
+            arrowIcon.style.transform = `rotate(${bgDirectionAngle - 45}deg)`;
+        }
+
+        const rad = bgDirectionAngle * (Math.PI / 180);
+        const startX = -Math.sin(rad) * 65;
+        const startY = Math.cos(rad) * 65;
+        const endX = Math.sin(rad) * 65;
+        const endY = -Math.cos(rad) * 65;
+
+        document.documentElement.style.setProperty('--bg-start-x', `${startX.toFixed(2)}vh`);
+        document.documentElement.style.setProperty('--bg-start-y', `${startY.toFixed(2)}vh`);
+        document.documentElement.style.setProperty('--bg-end-x', `${endX.toFixed(2)}vh`);
+        document.documentElement.style.setProperty('--bg-end-y', `${endY.toFixed(2)}vh`);
+    }
+
+    updateBgDirection(bgDirectionAngle);
+
     function initDynamicLighting() {
-        // Overlay de Luz Dinâmica que segue a lanterna do mouse
         let overlay = document.getElementById('dynamic-lighting-overlay');
         if (!overlay) {
             overlay = document.createElement('div');
@@ -179,7 +447,6 @@ document.addEventListener('DOMContentLoaded', () => {
             document.documentElement.style.setProperty('--mouse-y', `${e.clientY}px`);
         });
 
-        // Zoom da Lanterna via Scroll do Mouse (Wheel) quando as luzes estão APAGADAS
         window.addEventListener('wheel', (e) => {
             if (!document.body.classList.contains('lights-off')) return;
 
@@ -193,13 +460,12 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('flashlight_size', spotlightRadius);
         }, { passive: true });
 
-        // Carrega estado salvo no localStorage
         const savedState = localStorage.getItem('dynamic_lights_state') || 'on';
         if (savedState === 'off') {
             document.body.classList.add('lights-off');
         }
 
-        // Inserção dos Controles no Canto Esquerdo do Footer (Switch + Dado Texto + Dado Cores #HEX)
+        // Inserção dos Controles no Canto Esquerdo do Footer
         const footer = document.querySelector('footer');
         if (footer && !footer.querySelector('.footer-controls-left')) {
             const existingContent = footer.innerHTML;
@@ -214,14 +480,27 @@ document.addEventListener('DOMContentLoaded', () => {
                     <button class="dice-btn-wrapper" id="dice-scramble-trigger" title="Embaralhar letras (Mantendo 1ª maiúscula)">
                         <i class="fas fa-dice"></i>
                     </button>
-                    <button class="dice-btn-wrapper" id="dice-color-trigger" title="Randomizar cores #HEX de TODOS os elementos (Fundo, Cards, Footer, Textos)">
+                    <button class="dice-btn-wrapper" id="dice-color-trigger" title="Randomizar cores #HEX de TODOS os elementos">
                         <i class="fas fa-dice-d20"></i>
+                    </button>
+                    <div class="speed-btn-wrapper" title="Digite a velocidade desejada (ex: 0.5, 2, 5, 10)">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <input type="number" id="speed-custom-input" class="speed-input" value="1" min="0.01" max="500" step="0.5">
+                        <span>x</span>
+                    </div>
+                    <button class="direction-btn-wrapper" id="direction-arrow-trigger" title="Clique ou arraste para girar a direção dos ícones do fundo">
+                        <i class="fas fa-location-arrow" id="direction-arrow-icon"></i>
+                    </button>
+                    <button class="voxel-btn-wrapper" id="voxel-mode-trigger" title="Ativar/Desativar efeito 3D Voxel em todos os ícones">
+                        <i class="fas fa-cubes" id="voxel-btn-icon"></i>
                     </button>
                 </div>
                 <div class="footer-content-right">
                     ${existingContent}
                 </div>
             `;
+
+            updateBgDirection(bgDirectionAngle);
 
             const switchBtn = footer.querySelector('#light-switch-trigger');
             switchBtn.addEventListener('click', (e) => {
@@ -250,13 +529,88 @@ document.addEventListener('DOMContentLoaded', () => {
                     colorDiceBtn.classList.remove('rolling');
                 }, 600);
             });
+
+            const speedInput = footer.querySelector('#speed-custom-input');
+            speedInput.addEventListener('input', () => {
+                const val = parseFloat(speedInput.value);
+                if (!isNaN(val) && val > 0) {
+                    document.documentElement.style.setProperty('--bg-speed-mult', 1 / val);
+                }
+            });
+            speedInput.addEventListener('click', (e) => e.stopPropagation());
+
+            const dirBtn = footer.querySelector('#direction-arrow-trigger');
+            if (dirBtn) {
+                let isDraggingArrow = false;
+
+                dirBtn.addEventListener('click', (e) => {
+                    if (isDraggingArrow) return;
+                    e.stopPropagation();
+                    updateBgDirection(bgDirectionAngle + 45);
+                });
+
+                dirBtn.addEventListener('pointerdown', (e) => {
+                    if (e.button !== 0) return;
+                    e.stopPropagation();
+                    let startX = e.clientX;
+                    let startY = e.clientY;
+                    let dragged = false;
+
+                    const rect = dirBtn.getBoundingClientRect();
+                    const centerX = rect.left + rect.width / 2;
+                    const centerY = rect.top + rect.height / 2;
+
+                    function onPointerMove(moveEvent) {
+                        const dist = Math.hypot(moveEvent.clientX - startX, moveEvent.clientY - startY);
+                        if (dist > 4) {
+                            dragged = true;
+                            isDraggingArrow = true;
+                        }
+
+                        if (dragged) {
+                            const dx = moveEvent.clientX - centerX;
+                            const dy = moveEvent.clientY - centerY;
+                            const angleRad = Math.atan2(dy, dx);
+                            let angleDeg = angleRad * (180 / Math.PI) + 90;
+                            updateBgDirection(Math.round(angleDeg));
+                        }
+                    }
+
+                    function onPointerUp() {
+                        window.removeEventListener('pointermove', onPointerMove);
+                        window.removeEventListener('pointerup', onPointerUp);
+                        setTimeout(() => {
+                            isDraggingArrow = false;
+                        }, 50);
+                    }
+
+                    window.addEventListener('pointermove', onPointerMove);
+                    window.addEventListener('pointerup', onPointerUp);
+                });
+
+                dirBtn.addEventListener('wheel', (e) => {
+                    e.stopPropagation();
+                    const delta = e.deltaY < 0 ? -15 : 15;
+                    updateBgDirection(bgDirectionAngle + delta);
+                }, { passive: true });
+            }
+
+            const voxelBtn = footer.querySelector('#voxel-mode-trigger');
+            if (voxelBtn) {
+                if (isVoxelModeActive) voxelBtn.classList.add('active');
+                voxelBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    isVoxelModeActive = !isVoxelModeActive;
+                    updateVoxelModeState();
+                });
+            }
         }
     }
 
     initDynamicLighting();
 
     // ------------------------------------------
-    // 4. Sistema de Física Interativa (Apenas Item Segurado Empurra)
+    // 5. Sistema de Física Interativa (Apenas Item Segurado Empurra)
     // ------------------------------------------
     const physicsEntities = [];
     let isPhysicsLoopRunning = false;
@@ -271,7 +625,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function updatePhysicsLoop() {
         let activeDisplacement = false;
 
-        // Apenas a entidade SEGURADA empurra as outras coisas ao seu redor
         for (let i = 0; i < physicsEntities.length; i++) {
             const a = physicsEntities[i];
             if (!a.isHeld) continue;
@@ -385,7 +738,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ------------------------------------------
-    // 5. Dashboard Cards (Física & Navegação Normal por Clique)
+    // 6. Dashboard Cards (Física & Navegação Normal por Clique)
     // ------------------------------------------
     const grid = document.querySelector('.dashboard-grid');
     if (grid) {
@@ -473,7 +826,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     startPhysicsLoop();
 
                     if (!hasMoved) {
-                        // Clique simples normal -> navega imediatamente para o link!
                         const href = card.getAttribute('href');
                         if (href) {
                             window.location.href = href;
@@ -489,7 +841,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ------------------------------------------
-    // 6. Animação de Minis Cadernos no Fundo (Arrastáveis & Interativo)
+    // 7. Animação de Minis Cadernos no Fundo (Arrastáveis, Velocidade Digitar & Desenho de Lápis)
     // ------------------------------------------
     function createNotebookBackground() {
         if (document.getElementById('bg-notebooks-container')) return;
@@ -502,7 +854,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalParticles = 30;
 
         function resetNotebook(el, physicsEntity) {
-            const left = Math.random() * 95;
+            const spreadX = (Math.random() - 0.5) * 96;
+            const spreadY = (Math.random() - 0.5) * 50;
             const duration = 12 + Math.random() * 22;
             const delay = Math.random() * 18;
             const size = 14 + Math.random() * 18;
@@ -510,16 +863,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
             el.className = `fas ${iconClass} floating-notebook`;
             el.style.cssText = `
-                left: ${left}vw;
-                animation-duration: ${duration}s;
+                left: calc(50vw + ${spreadX}vw);
+                top: calc(50vh + ${spreadY}vh);
+                bottom: auto;
+                position: absolute;
+                --base-duration: ${duration}s;
                 animation-delay: -${delay}s;
                 font-size: ${size}px;
-                position: absolute;
-                bottom: -60px;
-                top: auto;
             `;
             el.style.removeProperty('--fall-distance');
             el.style.removeProperty('--fall-rotation');
+
+            applyVoxelToElement(el);
 
             if (isColorRandomized) {
                 const color = getRandomHexColor();
@@ -549,6 +904,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 const startY = e.clientY;
                 let isDragged = false;
 
+                const isPencil = el.classList.contains('fa-pencil-alt') || el.querySelector('.fa-pencil-alt') !== null || (el._savedIconClasses && el._savedIconClasses.includes('fa-pencil-alt'));
+                if (isPencil) {
+                    initDrawingCanvas();
+                    isDrawingWithPencil = true;
+                    const initRect = el.getBoundingClientRect();
+                    lastPencilPos = {
+                        x: initRect.left + initRect.width * 0.1,
+                        y: initRect.bottom - initRect.height * 0.1
+                    };
+                }
+
                 el.style.animation = 'none';
                 el.style.position = 'fixed';
                 el.style.top = `${rect.top}px`;
@@ -576,6 +942,15 @@ document.addEventListener('DOMContentLoaded', () => {
                         el.style.top = `${newTop}px`;
                         startPhysicsLoop();
                     }
+
+                    if (isDrawingWithPencil && isPencil) {
+                        const currentRect = el.getBoundingClientRect();
+                        const tipX = currentRect.left + currentRect.width * 0.1;
+                        const tipY = currentRect.bottom - currentRect.height * 0.1;
+                        const pencilColor = el.style.color || '#38bdf8';
+                        drawLineSegment(lastPencilPos.x, lastPencilPos.y, tipX, tipY, pencilColor);
+                        lastPencilPos = { x: tipX, y: tipY };
+                    }
                 }
 
                 function onPointerUp(upEvent) {
@@ -587,8 +962,64 @@ document.addEventListener('DOMContentLoaded', () => {
                         el.releasePointerCapture(e.pointerId);
                     } catch (err) {}
 
+                    if (isPencil) {
+                        isDrawingWithPencil = false;
+                    }
+
                     el.classList.remove('grabbing');
                     physicsEntity.isHeld = false;
+
+                    const existingIndex = landedVoxelBlocks.findIndex(b => b.element === el);
+                    if (existingIndex !== -1) {
+                        landedVoxelBlocks.splice(existingIndex, 1);
+                    }
+                    el.classList.remove('accumulated-voxel', 'falling-to-stack');
+
+                    if (isVoxelModeActive) {
+                        const currentRect = el.getBoundingClientRect();
+                        const cubeSize = currentRect.height || 36;
+                        let currentLeft = currentRect.left;
+                        const currentTop = currentRect.top;
+
+                        landedVoxelBlocks.forEach(b => {
+                            if (!b.element || !document.body.contains(b.element) || b.element === el) return;
+                            const bRect = b.element.getBoundingClientRect();
+                            const centerDiff = Math.abs((currentLeft + cubeSize / 2) - (bRect.left + bRect.width / 2));
+                            if (centerDiff < cubeSize * 0.45) {
+                                currentLeft = bRect.left;
+                            }
+                        });
+
+                        const targetTop = calculateVoxelLandingTop(currentLeft, cubeSize, el);
+                        const fallDistance = Math.max(0, targetTop - currentTop);
+
+                        el.style.setProperty('--fall-distance', `${fallDistance}px`);
+                        el.style.animation = 'none';
+                        void el.offsetHeight;
+
+                        el.classList.add('falling-to-stack');
+
+                        const fallDuration = Math.min(600, Math.max(250, fallDistance * 1.1));
+                        setTimeout(() => {
+                            el.classList.remove('falling-to-stack');
+                            el.style.animation = '';
+                            el.style.position = 'fixed';
+                            el.style.top = `${targetTop}px`;
+                            el.style.left = `${currentLeft}px`;
+                            el.style.bottom = 'auto';
+                            el.classList.add('accumulated-voxel');
+
+                            landedVoxelBlocks.push({
+                                element: el,
+                                top: targetTop,
+                                left: currentLeft,
+                                width: cubeSize,
+                                height: cubeSize
+                            });
+                        }, fallDuration);
+
+                        return;
+                    }
 
                     const currentRect = el.getBoundingClientRect();
                     const windowHeight = window.innerHeight;
@@ -628,14 +1059,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const iconClass = icons[Math.floor(Math.random() * icons.length)];
             el.className = `fas ${iconClass} floating-notebook`;
 
-            const left = Math.random() * 95;
+            const spreadX = (Math.random() - 0.5) * 96;
+            const spreadY = (Math.random() - 0.5) * 50;
             const duration = 12 + Math.random() * 22;
             const delay = Math.random() * 18;
             const size = 14 + Math.random() * 18;
 
             el.style.cssText = `
-                left: ${left}vw;
-                animation-duration: ${duration}s;
+                left: calc(50vw + ${spreadX}vw);
+                top: calc(50vh + ${spreadY}vh);
+                bottom: auto;
+                position: absolute;
+                --base-duration: ${duration}s;
                 animation-delay: -${delay}s;
                 font-size: ${size}px;
             `;
@@ -653,6 +1088,7 @@ document.addEventListener('DOMContentLoaded', () => {
             physicsEntities.push(physicsEntity);
 
             attachNotebookEvents(el, physicsEntity);
+            applyVoxelToElement(el);
             container.appendChild(el);
         }
     }

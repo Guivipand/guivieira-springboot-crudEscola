@@ -72,9 +72,12 @@ body {
 
 .floating-notebook {
     position: absolute;
-    bottom: -60px;
+    top: 50vh;
+    left: 50vw;
+    bottom: auto;
     color: #1b2a4a;
     animation: floatNotebooks linear infinite;
+    animation-duration: calc(var(--base-duration, 18s) * var(--bg-speed-mult, 1)) !important;
     transform-style: preserve-3d;
     pointer-events: auto;
     cursor: pointer !important;
@@ -148,17 +151,17 @@ body {
 
 @keyframes floatNotebooks {
     0% {
-        transform: translateY(0) rotate(0deg) rotateY(0deg) scale(0.7);
+        transform: translate(calc(-50% + var(--bg-start-x, 0vh)), calc(-50% + var(--bg-start-y, 65vh))) rotate(0deg) rotateY(0deg) scale(0.7);
         opacity: 0;
     }
     15% {
-        opacity: 0.28;
+        opacity: 0.32;
     }
     85% {
-        opacity: 0.28;
+        opacity: 0.32;
     }
     100% {
-        transform: translateY(-115vh) rotate(360deg) rotateY(180deg) scale(1.15);
+        transform: translate(calc(-50% + var(--bg-end-x, 0vh)), calc(-50% + var(--bg-end-y, -65vh))) rotate(360deg) rotateY(180deg) scale(1.15);
         opacity: 0;
     }
 }
@@ -811,11 +814,12 @@ a.btn-link:hover {
    =========================== */
 
 footer {
-    background: var(--primary-color);
+    background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
     color: white;
     padding: 14px 28px;
     margin-top: auto;
-    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+    border-top: 3px solid #38bdf8;
+    box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.6), inset 0 2px 4px rgba(255, 255, 255, 0.25);
     position: relative;
     z-index: 20;
     display: flex;
@@ -823,6 +827,13 @@ footer {
     align-items: center;
     flex-wrap: wrap;
     gap: 15px;
+    transform-style: preserve-3d;
+}
+
+body.lights-off footer {
+    background: linear-gradient(180deg, #0f172a 0%, #020617 100%);
+    border-top-color: #38bdf8;
+    box-shadow: 0 -10px 30px rgba(56, 189, 248, 0.35), inset 0 2px 4px rgba(56, 189, 248, 0.4);
 }
 
 footer .footer-content-right {
@@ -916,6 +927,307 @@ body.lights-off .dice-btn-wrapper {
 }
 
 body.lights-off .dice-btn-wrapper:hover {
+    background: rgba(56, 189, 248, 0.35);
+    color: #ffffff;
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.7);
+}
+
+.speed-btn-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 0 12px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    font-size: 0.82rem;
+    font-weight: 700;
+    outline: none;
+    user-select: none;
+}
+
+.speed-btn-wrapper:hover {
+    background: rgba(255, 255, 255, 0.28);
+    transform: scale(1.08);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    color: #38bdf8;
+}
+
+.speed-btn-wrapper:active {
+    transform: scale(0.95);
+}
+
+body.lights-off .speed-btn-wrapper {
+    background: rgba(56, 189, 248, 0.2);
+    border-color: #38bdf8;
+    color: #38bdf8;
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+}
+
+body.lights-off .speed-btn-wrapper:hover {
+    background: rgba(56, 189, 248, 0.35);
+    color: #ffffff;
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.7);
+}
+
+.speed-input, #speed-custom-input {
+    width: 32px;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    border: none;
+    color: white;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-align: center;
+    outline: none;
+    -moz-appearance: textfield;
+}
+
+.speed-input::-webkit-outer-spin-button,
+.speed-input::-webkit-inner-spin-button,
+#speed-custom-input::-webkit-outer-spin-button,
+#speed-custom-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+body.lights-off .speed-input,
+body.lights-off #speed-custom-input {
+    color: #38bdf8;
+}
+
+.direction-btn-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+    font-size: 0.95rem;
+    outline: none;
+    user-select: none;
+    touch-action: none;
+}
+
+.direction-btn-wrapper:hover {
+    background: rgba(255, 255, 255, 0.28);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    color: #38bdf8;
+}
+
+.direction-btn-wrapper:active {
+    transform: scale(0.92);
+}
+
+#direction-arrow-icon {
+    transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: inline-block;
+    pointer-events: none;
+}
+
+body.lights-off .direction-btn-wrapper {
+    background: rgba(56, 189, 248, 0.2);
+    border-color: #38bdf8;
+    color: #38bdf8;
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+}
+
+body.lights-off .direction-btn-wrapper:hover {
+    background: rgba(56, 189, 248, 0.35);
+    color: #ffffff;
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.7);
+}
+
+/* ==========================================
+   Efeito Cubos Sólidos 3D Voxel (6 Faces em CSS 3D)
+   ========================================== */
+
+.floating-notebook.voxel-mode {
+    transform-style: preserve-3d !important;
+    perspective: 1000px;
+    background: transparent !important;
+}
+
+.voxel-cube-3d {
+    position: relative;
+    width: var(--cube-size, 32px);
+    height: var(--cube-size, 32px);
+    transform-style: preserve-3d;
+    animation: voxelCubeSpin 8s linear infinite;
+}
+
+.cube-face {
+    position: absolute;
+    width: var(--cube-size, 32px);
+    height: var(--cube-size, 32px);
+    background: linear-gradient(135deg, #0ea5e9, #0284c7);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: calc(var(--cube-size, 32px) * 0.52);
+    backface-visibility: visible;
+    border-radius: 4px;
+    user-select: none;
+    pointer-events: none;
+}
+
+/* 6 Faces do Cubo Sólido em 3D */
+.cube-front {
+    transform: rotateY(0deg) translateZ(calc(var(--cube-size, 32px) / 2));
+    background: linear-gradient(135deg, #38bdf8, #0284c7);
+}
+
+.cube-back {
+    transform: rotateY(180deg) translateZ(calc(var(--cube-size, 32px) / 2));
+    background: linear-gradient(135deg, #0369a1, #0f172a);
+}
+
+.cube-right {
+    transform: rotateY(90deg) translateZ(calc(var(--cube-size, 32px) / 2));
+    background: linear-gradient(135deg, #0284c7, #075985);
+}
+
+.cube-left {
+    transform: rotateY(-90deg) translateZ(calc(var(--cube-size, 32px) / 2));
+    background: linear-gradient(135deg, #075985, #0369a1);
+}
+
+.cube-top {
+    transform: rotateX(90deg) translateZ(calc(var(--cube-size, 32px) / 2));
+    background: linear-gradient(135deg, #7dd3fc, #38bdf8);
+}
+
+.cube-bottom {
+    transform: rotateX(-90deg) translateZ(calc(var(--cube-size, 32px) / 2));
+    background: linear-gradient(135deg, #0f172a, #0284c7);
+}
+
+@keyframes voxelCubeSpin {
+    0% {
+        transform: rotateX(15deg) rotateY(0deg) rotateZ(0deg);
+    }
+    50% {
+        transform: rotateX(-25deg) rotateY(180deg) rotateZ(15deg);
+    }
+    100% {
+        transform: rotateX(15deg) rotateY(360deg) rotateZ(0deg);
+    }
+}
+
+/* ==========================================
+   Acúmulo e Empilhamento de Blocos 3D no Fundo da Tela
+   ========================================== */
+
+.floating-notebook.accumulated-voxel {
+    animation: voxelLandedBreathing 4s ease-in-out infinite alternate !important;
+    position: fixed !important;
+    bottom: auto !important;
+    z-index: 5 !important;
+    cursor: grab !important;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.7)) !important;
+}
+
+.floating-notebook.accumulated-voxel:hover {
+    filter: drop-shadow(0 12px 24px rgba(56, 189, 248, 0.8)) !important;
+    transform: scale(1.08);
+}
+
+.floating-notebook.falling-to-stack {
+    animation: fallToStack 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+    pointer-events: none;
+    z-index: 90 !important;
+}
+
+@keyframes fallToStack {
+    0% {
+        transform: translateY(0) scale(1) rotate(0deg);
+    }
+    60% {
+        transform: translateY(var(--fall-distance, 300px)) scale(1.18, 0.82) rotate(3deg);
+    }
+    75% {
+        transform: translateY(calc(var(--fall-distance, 300px) - 14px)) scale(0.92, 1.08) rotate(-2deg);
+    }
+    88% {
+        transform: translateY(calc(var(--fall-distance, 300px) + 3px)) scale(1.04, 0.96) rotate(1deg);
+    }
+    100% {
+        transform: translateY(var(--fall-distance, 300px)) scale(1, 1) rotate(0deg);
+    }
+}
+
+@keyframes voxelLandedBreathing {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.03);
+    }
+}
+
+.voxel-btn-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    font-size: 0.95rem;
+    outline: none;
+    user-select: none;
+}
+
+.voxel-btn-wrapper:hover {
+    background: rgba(255, 255, 255, 0.28);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    color: #38bdf8;
+    transform: scale(1.08);
+}
+
+.voxel-btn-wrapper:active {
+    transform: scale(0.92);
+}
+
+.voxel-btn-wrapper.active {
+    background: linear-gradient(135deg, #0284c7, #38bdf8);
+    border-color: #38bdf8;
+    color: #ffffff;
+    box-shadow: 0 0 18px rgba(56, 189, 248, 0.8);
+    animation: voxelPulse 2s infinite alternate;
+}
+
+@keyframes voxelPulse {
+    0% { box-shadow: 0 0 10px rgba(56, 189, 248, 0.6); }
+    100% { box-shadow: 0 0 22px rgba(56, 189, 248, 0.95); }
+}
+
+body.lights-off .voxel-btn-wrapper {
+    background: rgba(56, 189, 248, 0.2);
+    border-color: #38bdf8;
+    color: #38bdf8;
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+}
+
+body.lights-off .voxel-btn-wrapper:hover {
     background: rgba(56, 189, 248, 0.35);
     color: #ffffff;
     box-shadow: 0 0 20px rgba(56, 189, 248, 0.7);
