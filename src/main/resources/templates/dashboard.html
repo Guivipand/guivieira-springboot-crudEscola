@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Sistema Acadêmico</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-graduation-cap"></i> <span>Acadêmico</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Dashboard</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container-main">
+            <div class="dashboard-container">
+                <div class="dashboard-title fade-in">
+                    <h1>Bem-vindo ao Sistema Acadêmico</h1>
+                    <p>Selecione uma opção abaixo para gerenciar dados</p>
+                </div>
+
+                <div class="dashboard-grid">
+                    <!-- Alunos -->
+                    <a href="/listarAlunos" class="dashboard-card">
+                        <i class="fas fa-user-graduate"></i>
+                        <h3>Alunos</h3>
+                        <p>Gerenciar alunos e sua documentação</p>
+                    </a>
+
+                    <!-- Cursos -->
+                    <a href="/listarCursos" class="dashboard-card">
+                        <i class="fas fa-book"></i>
+                        <h3>Cursos</h3>
+                        <p>Gerenciar cursos e programas acadêmicos</p>
+                    </a>
+
+                    <!-- Disciplinas -->
+                    <a href="/listarDisciplinas" class="dashboard-card">
+                        <i class="fas fa-chalkboard"></i>
+                        <h3>Disciplinas</h3>
+                        <p>Gerenciar disciplinas e currículos</p>
+                    </a>
+
+                    <!-- Professores -->
+                    <a href="/listarProfessores" class="dashboard-card">
+                        <i class="fas fa-chalkboard-user"></i>
+                        <h3>Professores</h3>
+                        <p>Gerenciar professores e instrutores</p>
+                    </a>
+
+                    <!-- Oferta de Disciplina -->
+                    <a href="/listarOfertaDisciplinas" class="dashboard-card">
+                        <i class="fas fa-list-check"></i>
+                        <h3>Oferta de Disciplinas</h3>
+                        <p>Gerenciar ofertas de disciplinas</p>
+                    </a>
+
+                    <!-- Matrículas -->
+                    <a href="/listarMatriculas" class="dashboard-card">
+                        <i class="fas fa-clipboard-list"></i>
+                        <h3>Matrículas</h3>
+                        <p>Gerenciar matrículas de alunos</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-fluid">
+            <p>&copy; 2024 Sistema Acadêmico. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes da Oferta de Disciplina</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-graduation-cap"></i> <span>Acadêmico</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/listarOfertaDisciplinas">Ofertas</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container-main">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="/listarOfertaDisciplinas">Ofertas de Disciplinas</a></li>
+                    <li class="breadcrumb-item active">Detalhes</li>
+                </ol>
+            </nav>
+
+            <!-- Details Card -->
+            <div class="card fade-in" style="max-width: 600px; margin: 0 auto;">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-list-check"></i> Detalhes da Oferta de Disciplina
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <!-- ID -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <p class="text-muted mb-2">ID</p>
+                            <h6 th:text="${oferta.id}"></h6>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="text-muted mb-2">Status</p>
+                            <span class="badge badge-success">Ativa</span>
+                        </div>
+                    </div>
+
+                    <!-- Professor -->
+                    <div class="mb-4">
+                        <p class="text-muted mb-2">
+                            <i class="fas fa-user-tie"></i> Professor
+                        </p>
+                        <h6 th:text="${oferta.professor != null} ? ${oferta.professor.nome} : 'Sem professor'"></h6>
+                    </div>
+
+                    <!-- Disciplina -->
+                    <div class="mb-4">
+                        <p class="text-muted mb-2">
+                            <i class="fas fa-book"></i> Disciplina
+                        </p>
+                        <h6 th:text="${oferta.disciplina != null} ? ${oferta.disciplina.nome} : 'Sem disciplina'"></h6>
+                    </div>
+
+                    <!-- Semestre e Sala -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <p class="text-muted mb-2">
+                                <i class="fas fa-calendar"></i> Semestre
+                            </p>
+                            <h6 th:text="${oferta.semestre}"></h6>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="text-muted mb-2">
+                                <i class="fas fa-door-open"></i> Sala
+                            </p>
+                            <h6 th:text="${oferta.sala}"></h6>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="card-footer bg-light d-flex gap-2 justify-content-between">
+                    <div>
+                        <a th:href="@{/formularioOfertaDisciplina/{id}(id=${oferta.id})}" class="btn btn-warning btn-sm">
+                            <i class="fas fa-edit"></i> Editar
+                        </a>
+                        <a th:href="@{/deletarOfertaDisciplina/{id}(id=${oferta.id})}" 
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Tem certeza que deseja deletar?')">
+                            <i class="fas fa-trash"></i> Deletar
+                        </a>
+                    </div>
+                    <a href="/listarOfertaDisciplinas" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Voltar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-fluid">
+            <p>&copy; 2024 Sistema Acadêmico. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

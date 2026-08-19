@@ -1,0 +1,138 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes da Matrícula</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-graduation-cap"></i> <span>Acadêmico</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/listarMatriculas">Matrículas</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container-main">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="/listarMatriculas">Matrículas</a></li>
+                    <li class="breadcrumb-item active">Detalhes</li>
+                </ol>
+            </nav>
+
+            <!-- Details Card -->
+            <div class="card fade-in" style="max-width: 700px; margin: 0 auto;">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-clipboard-list"></i> Detalhes da Matrícula
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <!-- ID -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <p class="text-muted mb-2">ID</p>
+                            <h6 th:text="${matricula.id}"></h6>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="text-muted mb-2">Situação</p>
+                            <span class="badge" 
+                                  th:class="${matricula.situacao == 'Ativa'} ? 'badge badge-success' : 'badge badge-secondary'"
+                                  th:text="${matricula.situacao}"></span>
+                        </div>
+                    </div>
+
+                    <!-- Aluno -->
+                    <div class="mb-4">
+                        <p class="text-muted mb-2">
+                            <i class="fas fa-user"></i> Aluno
+                        </p>
+                        <h6 th:text="${matricula.aluno != null} ? ${matricula.aluno.nome} : 'Sem aluno'"></h6>
+                    </div>
+
+                    <!-- Curso -->
+                    <div class="mb-4">
+                        <p class="text-muted mb-2">
+                            <i class="fas fa-book"></i> Curso
+                        </p>
+                        <h6 th:text="${matricula.curso != null} ? ${matricula.curso.titulo} : 'Sem curso'"></h6>
+                    </div>
+
+                    <!-- Oferta -->
+                    <div class="mb-4">
+                        <p class="text-muted mb-2">
+                            <i class="fas fa-chalkboard"></i> Oferta de Disciplina
+                        </p>
+                        <h6 th:text="${matricula.ofertaDisciplina != null} ? ${matricula.ofertaDisciplina.disciplina.nome} : 'Sem oferta'"></h6>
+                    </div>
+
+                    <!-- Datas -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <p class="text-muted mb-2">
+                                <i class="fas fa-calendar-alt"></i> Data de Início
+                            </p>
+                            <h6 th:text="${matricula.dataInicio}"></h6>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="text-muted mb-2">
+                                <i class="fas fa-calendar-check"></i> Data de Fim
+                            </p>
+                            <h6 th:text="${matricula.dataFim}"></h6>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="card-footer bg-light d-flex gap-2 justify-content-between">
+                    <div>
+                        <a th:href="@{/formularioMatricula/{id}(id=${matricula.id})}" class="btn btn-warning btn-sm">
+                            <i class="fas fa-edit"></i> Editar
+                        </a>
+                        <a th:href="@{/deletarMatricula/{id}(id=${matricula.id})}" 
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Tem certeza que deseja deletar?')">
+                            <i class="fas fa-trash"></i> Deletar
+                        </a>
+                    </div>
+                    <a href="/listarMatriculas" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Voltar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-fluid">
+            <p>&copy; 2024 Sistema Acadêmico. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
