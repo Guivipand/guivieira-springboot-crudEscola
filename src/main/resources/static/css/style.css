@@ -984,31 +984,6 @@ body.lights-off #dynamic-lighting-overlay {
     );
 }
 
-#flashlight-size-hint {
-    position: fixed;
-    top: 25px;
-    right: 25px;
-    background: rgba(15, 23, 42, 0.92);
-    color: #38bdf8;
-    border: 1px solid rgba(56, 189, 248, 0.4);
-    padding: 8px 18px;
-    border-radius: 25px;
-    font-size: 0.88rem;
-    font-weight: 600;
-    pointer-events: none;
-    z-index: 10000;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 0 25px rgba(56, 189, 248, 0.35);
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-#flashlight-size-hint.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
 /* Modo Luzes Apagadas (Lights OFF Theme) */
 body.lights-off {
     background-color: #060911 !important;

@@ -1,11 +1,11 @@
 /* ==========================================
-   Efeitos Visuais 3D, Fundo Animado com Física e Sistema de Luz Dinâmica
+   Efeitos Visuais 3D, Fundo Animado com Física, Luz Dinâmica e Dados Malucos
    ========================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
 
     // ------------------------------------------
-    // 1. Sistema de Embaralhar Letras (Mantendo 1ª Maiúscula)
+    // 1. Sistema 1: Embaralhar Letras (Mantendo 1ª Maiúscula)
     // ------------------------------------------
     let isTextScrambled = false;
 
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let letters = word.toLowerCase().split('');
 
-        // Algoritmo Fisher-Yates para embaralhar
+        // Algoritmo Fisher-Yates para embaralhar letras
         for (let i = letters.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [letters[i], letters[j]] = [letters[j], letters[i]];
@@ -75,7 +75,92 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ------------------------------------------
-    // 2. Sistema de Luz Dinâmica & Controles do Footer
+    // 2. Sistema 2: Embaralhar Cores em #HEX Total (Fundo, Cards, Footer, Textos, Tudo!)
+    // ------------------------------------------
+    let isColorRandomized = false;
+    let colorModifiedElements = [];
+
+    function getRandomHexColor() {
+        return '#' + Math.floor(Math.random() * 0xFFFFFF).toString(16).padStart(6, '0');
+    }
+
+    function toggleColorRandomizer() {
+        if (!isColorRandomized) {
+            colorModifiedElements = [];
+            const selector = 'body, header, nav, footer, main, .container-main, h1, h2, h3, h4, h5, p, span, a, i, button, td, th, tr, label, .dashboard-card, .floating-notebook, .btn, .card, .navbar, table, .footer-content-right';
+            const elements = document.querySelectorAll(selector);
+
+            elements.forEach(el => {
+                // Não altera os botões de controle do próprio footer
+                if (el.classList.contains('light-switch-wrapper') || el.classList.contains('dice-btn-wrapper') || el.closest('.light-switch-wrapper') || el.closest('.dice-btn-wrapper')) return;
+
+                if (!el._origStyle) {
+                    el._origStyle = {
+                        color: el.style.color || '',
+                        background: el.style.background || '',
+                        backgroundColor: el.style.backgroundColor || '',
+                        borderColor: el.style.borderColor || '',
+                        filter: el.style.filter || '',
+                        boxShadow: el.style.boxShadow || ''
+                    };
+                }
+
+                colorModifiedElements.push(el);
+
+                const hex1 = getRandomHexColor();
+                const hex2 = getRandomHexColor();
+                const hex3 = getRandomHexColor();
+
+                if (el.tagName === 'BODY' || el.tagName === 'MAIN' || el.classList.contains('container-main')) {
+                    el.style.setProperty('background', hex1, 'important');
+                    el.style.setProperty('background-color', hex1, 'important');
+                } else if (el.tagName === 'FOOTER' || el.tagName === 'HEADER' || el.tagName === 'NAV' || el.classList.contains('navbar')) {
+                    el.style.setProperty('background', hex1, 'important');
+                    el.style.setProperty('background-color', hex1, 'important');
+                    el.style.setProperty('border-color', hex2, 'important');
+                } else if (el.classList.contains('dashboard-card')) {
+                    // O card em si muda sua cor de fundo preenchida, borda e sombra em #HEX!
+                    el.style.setProperty('background', hex1, 'important');
+                    el.style.setProperty('background-color', hex1, 'important');
+                    el.style.setProperty('border-color', hex2, 'important');
+                    el.style.setProperty('box-shadow', `0 12px 30px ${hex2}`, 'important');
+                } else if (el.classList.contains('floating-notebook')) {
+                    // Cada caderno voador com hex individual
+                    el.style.setProperty('color', hex1, 'important');
+                    el.style.setProperty('filter', `drop-shadow(0 0 14px ${hex1})`, 'important');
+                } else if (['H1', 'H2', 'H3', 'H4', 'H5', 'P', 'SPAN', 'A', 'LABEL', 'I'].includes(el.tagName)) {
+                    el.style.setProperty('color', hex1, 'important');
+                } else if (el.tagName === 'BUTTON' || el.classList.contains('btn')) {
+                    el.style.setProperty('background', hex1, 'important');
+                    el.style.setProperty('background-color', hex1, 'important');
+                    el.style.setProperty('border-color', hex2, 'important');
+                    el.style.setProperty('color', hex3, 'important');
+                } else if (el.tagName === 'TD' || el.tagName === 'TH' || el.tagName === 'TABLE') {
+                    el.style.setProperty('background-color', hex1, 'important');
+                    el.style.setProperty('color', hex2, 'important');
+                    el.style.setProperty('border-color', hex3, 'important');
+                }
+            });
+
+            isColorRandomized = true;
+        } else {
+            // Restaura as cores originais exatas
+            colorModifiedElements.forEach(el => {
+                if (el._origStyle) {
+                    el.style.color = el._origStyle.color;
+                    el.style.background = el._origStyle.background;
+                    el.style.backgroundColor = el._origStyle.backgroundColor;
+                    el.style.borderColor = el._origStyle.borderColor;
+                    el.style.filter = el._origStyle.filter;
+                    el.style.boxShadow = el._origStyle.boxShadow;
+                }
+            });
+            isColorRandomized = false;
+        }
+    }
+
+    // ------------------------------------------
+    // 3. Sistema de Luz Dinâmica & Controles do Footer
     // ------------------------------------------
     function initDynamicLighting() {
         // Overlay de Luz Dinâmica que segue a lanterna do mouse
@@ -95,23 +180,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Zoom da Lanterna via Scroll do Mouse (Wheel) quando as luzes estão APAGADAS
-        let hintTimeout = null;
-        function showFlashlightSizeHint(size) {
-            let hint = document.getElementById('flashlight-size-hint');
-            if (!hint) {
-                hint = document.createElement('div');
-                hint.id = 'flashlight-size-hint';
-                document.body.appendChild(hint);
-            }
-            hint.innerHTML = `<i class="fas fa-search"></i> Foco da Lanterna: ${size}px`;
-            hint.classList.add('visible');
-
-            clearTimeout(hintTimeout);
-            hintTimeout = setTimeout(() => {
-                hint.classList.remove('visible');
-            }, 1200);
-        }
-
         window.addEventListener('wheel', (e) => {
             if (!document.body.classList.contains('lights-off')) return;
 
@@ -123,7 +191,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             document.documentElement.style.setProperty('--flashlight-size', `${spotlightRadius}px`);
             localStorage.setItem('flashlight_size', spotlightRadius);
-            showFlashlightSizeHint(spotlightRadius);
         }, { passive: true });
 
         // Carrega estado salvo no localStorage
@@ -132,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.classList.add('lights-off');
         }
 
-        // Inserção dos Controles no Canto Esquerdo do Footer (Switch + Botão de Dado)
+        // Inserção dos Controles no Canto Esquerdo do Footer (Switch + Dado Texto + Dado Cores #HEX)
         const footer = document.querySelector('footer');
         if (footer && !footer.querySelector('.footer-controls-left')) {
             const existingContent = footer.innerHTML;
@@ -146,6 +213,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <button class="dice-btn-wrapper" id="dice-scramble-trigger" title="Embaralhar letras (Mantendo 1ª maiúscula)">
                         <i class="fas fa-dice"></i>
+                    </button>
+                    <button class="dice-btn-wrapper" id="dice-color-trigger" title="Randomizar cores #HEX de TODOS os elementos (Fundo, Cards, Footer, Textos)">
+                        <i class="fas fa-dice-d20"></i>
                     </button>
                 </div>
                 <div class="footer-content-right">
@@ -170,13 +240,23 @@ document.addEventListener('DOMContentLoaded', () => {
                     diceBtn.classList.remove('rolling');
                 }, 600);
             });
+
+            const colorDiceBtn = footer.querySelector('#dice-color-trigger');
+            colorDiceBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                colorDiceBtn.classList.add('rolling');
+                toggleColorRandomizer();
+                setTimeout(() => {
+                    colorDiceBtn.classList.remove('rolling');
+                }, 600);
+            });
         }
     }
 
     initDynamicLighting();
 
     // ------------------------------------------
-    // 3. Sistema de Física Interativa (Apenas Item Segurado Empurra)
+    // 4. Sistema de Física Interativa (Apenas Item Segurado Empurra)
     // ------------------------------------------
     const physicsEntities = [];
     let isPhysicsLoopRunning = false;
@@ -305,7 +385,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ------------------------------------------
-    // 4. Dashboard Cards (Física & Navegação Normal por Clique)
+    // 5. Dashboard Cards (Física & Navegação Normal por Clique)
     // ------------------------------------------
     const grid = document.querySelector('.dashboard-grid');
     if (grid) {
@@ -409,7 +489,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ------------------------------------------
-    // 5. Animação de Minis Cadernos no Fundo (Arrastáveis & Interativo)
+    // 6. Animação de Minis Cadernos no Fundo (Arrastáveis & Interativo)
     // ------------------------------------------
     function createNotebookBackground() {
         if (document.getElementById('bg-notebooks-container')) return;
@@ -440,6 +520,12 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             el.style.removeProperty('--fall-distance');
             el.style.removeProperty('--fall-rotation');
+
+            if (isColorRandomized) {
+                const color = getRandomHexColor();
+                el.style.setProperty('color', color, 'important');
+                el.style.setProperty('filter', `drop-shadow(0 0 12px ${color})`, 'important');
+            }
 
             if (physicsEntity) {
                 physicsEntity.px = 0;
