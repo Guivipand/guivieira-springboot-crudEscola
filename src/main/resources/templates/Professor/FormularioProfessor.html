@@ -1,5 +1,6 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
 </head>
+
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -39,7 +41,7 @@
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
                     <li class="breadcrumb-item"><a href="/listarProfessores">Professores</a></li>
-                    <li class="breadcrumb-item active" 
+                    <li class="breadcrumb-item active"
                         th:text="${professor != null and professor.id != null} ? 'Editar' : 'Novo Professor'"></li>
                 </ol>
             </nav>
@@ -48,22 +50,23 @@
             <div class="card fade-in" style="max-width: 600px; margin: 0 auto;">
                 <div class="card-header">
                     <h4 class="mb-0">
-                        <i class="fas fa-user-tie"></i> 
-                        <span th:text="${professor != null and professor.id != null} ? 'Editar Professor' : 'Cadastrar Novo Professor'"></span>
+                        <i class="fas fa-user-tie"></i>
+                        <span
+                            th:text="${professor != null and professor.id != null} ? 'Editar Professor' : 'Cadastrar Novo Professor'"></span>
                     </h4>
                 </div>
                 <div class="card-body">
                     <form th:method="post"
-                          th:action="${professor != null and professor.id != null} ? @{/atualizarProfessor/{id}(id=${professor.id})} : @{/cadastrarProfessor}">
-                        
+                        th:action="${professor != null and professor.id != null} ? @{/professor/{id}/atualizar(id=${professor.id})} : @{/cadastrarProfessor}">
+
                         <!-- Nome -->
                         <div class="form-group">
                             <label for="nome" class="form-label">
                                 <span class="required">Nome</span>
                             </label>
-                            <input type="text" class="form-control" id="nome" name="nome" 
-                                   th:value="${professor != null} ? ${professor.nome} : ''"
-                                   placeholder="Digite o nome completo do professor" required>
+                            <input type="text" class="form-control" id="nome" name="nome"
+                                th:value="${professor != null} ? ${professor.nome} : ''"
+                                placeholder="Digite o nome completo do professor" required>
                         </div>
 
                         <!-- Email -->
@@ -71,9 +74,9 @@
                             <label for="email" class="form-label">
                                 <span class="required">Email</span>
                             </label>
-                            <input type="email" class="form-control" id="email" name="email" 
-                                   th:value="${professor != null} ? ${professor.email} : ''"
-                                   placeholder="Digite o email do professor" required>
+                            <input type="email" class="form-control" id="email" name="email"
+                                th:value="${professor != null} ? ${professor.email} : ''"
+                                placeholder="Digite o email do professor" required>
                         </div>
 
                         <!-- Departamento -->
@@ -81,9 +84,9 @@
                             <label for="departamento" class="form-label">
                                 <span class="required">Departamento</span>
                             </label>
-                            <input type="text" class="form-control" id="departamento" name="departamento" 
-                                   th:value="${professor != null} ? ${professor.departamento} : ''"
-                                   placeholder="Digite o departamento" required>
+                            <input type="text" class="form-control" id="departamento" name="departamento"
+                                th:value="${professor != null} ? ${professor.departamento} : ''"
+                                placeholder="Digite o departamento" required>
                         </div>
 
                         <!-- Titulação -->
@@ -93,10 +96,18 @@
                             </label>
                             <select class="form-select" id="titulacao" name="titulacao" required>
                                 <option value="">-- Selecionar titulação --</option>
-                                <option value="Licenciado" th:selected="${professor != null and professor.titulacao == 'Licenciado'}">Licenciado</option>
-                                <option value="Especialista" th:selected="${professor != null and professor.titulacao == 'Especialista'}">Especialista</option>
-                                <option value="Mestre" th:selected="${professor != null and professor.titulacao == 'Mestre'}">Mestre</option>
-                                <option value="Doutor" th:selected="${professor != null and professor.titulacao == 'Doutor'}">Doutor</option>
+                                <option value="Licenciado"
+                                    th:selected="${professor != null and professor.titulacao == 'Licenciado'}">
+                                    Licenciado</option>
+                                <option value="Especialista"
+                                    th:selected="${professor != null and professor.titulacao == 'Especialista'}">
+                                    Especialista</option>
+                                <option value="Mestre"
+                                    th:selected="${professor != null and professor.titulacao == 'Mestre'}">Mestre
+                                </option>
+                                <option value="Doutor"
+                                    th:selected="${professor != null and professor.titulacao == 'Doutor'}">Doutor
+                                </option>
                             </select>
                         </div>
 
@@ -118,10 +129,11 @@
     <!-- Footer -->
     <footer>
         <div class="container-fluid">
-            <p>&copy; 2024 Sistema Acadêmico. Todos os direitos reservados.</p>
+            <p>&copy; 2026 Sistema Acadêmico. Todos os direitos reservados.</p>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

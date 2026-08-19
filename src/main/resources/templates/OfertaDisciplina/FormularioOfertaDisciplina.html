@@ -1,5 +1,6 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
 </head>
+
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -24,7 +26,7 @@
                         <a class="nav-link" href="/">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="/listarOfertaDisciplinas">Ofertas</a>
+                        <a class="nav-link active" href="/listarOfertaDisciplina">Ofertas</a>
                     </li>
                 </ul>
             </div>
@@ -38,8 +40,8 @@
             <nav aria-label="breadcrumb" class="mb-4">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="/listarOfertaDisciplinas">Ofertas de Disciplinas</a></li>
-                    <li class="breadcrumb-item active" 
+                    <li class="breadcrumb-item"><a href="/listarOfertaDisciplina">Ofertas de Disciplinas</a></li>
+                    <li class="breadcrumb-item active"
                         th:text="${oferta != null and oferta.id != null} ? 'Editar' : 'Nova Oferta'"></li>
                 </ol>
             </nav>
@@ -48,14 +50,15 @@
             <div class="card fade-in" style="max-width: 600px; margin: 0 auto;">
                 <div class="card-header">
                     <h4 class="mb-0">
-                        <i class="fas fa-list-check"></i> 
-                        <span th:text="${oferta != null and oferta.id != null} ? 'Editar Oferta de Disciplina' : 'Cadastrar Nova Oferta de Disciplina'"></span>
+                        <i class="fas fa-list-check"></i>
+                        <span
+                            th:text="${oferta != null and oferta.id != null} ? 'Editar Oferta de Disciplina' : 'Cadastrar Nova Oferta de Disciplina'"></span>
                     </h4>
                 </div>
                 <div class="card-body">
                     <form th:method="post"
-                          th:action="${oferta != null and oferta.id != null} ? @{/atualizarOfertaDisciplina/{id}(id=${oferta.id})} : @{/cadastrarOfertaDisciplina}">
-                        
+                        th:action="${oferta != null and oferta.id != null} ? @{/ofertaDisciplina/{id}/atualizar(id=${oferta.id})} : @{/cadastrarOfertaDisciplina}">
+
                         <!-- Professor -->
                         <div class="form-group">
                             <label for="professorId" class="form-label">
@@ -63,10 +66,10 @@
                             </label>
                             <select class="form-select" id="professorId" name="professorId" required>
                                 <option value="">-- Selecionar professor --</option>
-                                <option th:each="professor : ${professores}"
-                                        th:value="${professor.id}"
-                                        th:text="${professor.nome}"
-                                        th:selected="${oferta != null and oferta.professor != null and oferta.professor.id == professor.id}"></option>
+                                <option th:each="professor : ${professores}" th:value="${professor.id}"
+                                    th:text="${professor.nome}"
+                                    th:selected="${oferta != null and oferta.professor != null and oferta.professor.id == professor.id}">
+                                </option>
                             </select>
                         </div>
 
@@ -77,10 +80,10 @@
                             </label>
                             <select class="form-select" id="disciplinaId" name="disciplinaId" required>
                                 <option value="">-- Selecionar disciplina --</option>
-                                <option th:each="disciplina : ${disciplinas}"
-                                        th:value="${disciplina.id}"
-                                        th:text="${disciplina.nome}"
-                                        th:selected="${oferta != null and oferta.disciplina != null and oferta.disciplina.id == disciplina.id}"></option>
+                                <option th:each="disciplina : ${disciplinas}" th:value="${disciplina.id}"
+                                    th:text="${disciplina.nome}"
+                                    th:selected="${oferta != null and oferta.disciplina != null and oferta.disciplina.id == disciplina.id}">
+                                </option>
                             </select>
                         </div>
 
@@ -89,9 +92,9 @@
                             <label for="semestre" class="form-label">
                                 <span class="required">Semestre</span>
                             </label>
-                            <input type="text" class="form-control" id="semestre" name="semestre" 
-                                   th:value="${oferta != null} ? ${oferta.semestre} : ''"
-                                   placeholder="Digite o semestre (ex: 2024.1)" required>
+                            <input type="text" class="form-control" id="semestre" name="semestre"
+                                th:value="${oferta != null} ? ${oferta.semestre} : ''"
+                                placeholder="Digite o semestre (ex: 2026.1)" required>
                         </div>
 
                         <!-- Sala -->
@@ -99,9 +102,9 @@
                             <label for="sala" class="form-label">
                                 <span class="required">Sala</span>
                             </label>
-                            <input type="text" class="form-control" id="sala" name="sala" 
-                                   th:value="${oferta != null} ? ${oferta.sala} : ''"
-                                   placeholder="Digite o número da sala" required>
+                            <input type="text" class="form-control" id="sala" name="sala"
+                                th:value="${oferta != null} ? ${oferta.sala} : ''" placeholder="Digite o número da sala"
+                                required>
                         </div>
 
                         <!-- Actions -->
@@ -109,7 +112,7 @@
                             <button type="submit" class="btn btn-success btn-lg">
                                 <i class="fas fa-save"></i> Salvar
                             </button>
-                            <a href="/listarOfertaDisciplinas" class="btn btn-secondary btn-lg">
+                            <a href="/listarOfertaDisciplina" class="btn btn-secondary btn-lg">
                                 <i class="fas fa-arrow-left"></i> Voltar
                             </a>
                         </div>
@@ -122,10 +125,11 @@
     <!-- Footer -->
     <footer>
         <div class="container-fluid">
-            <p>&copy; 2024 Sistema Acadêmico. Todos os direitos reservados.</p>
+            <p>&copy; 2026 Sistema Acadêmico. Todos os direitos reservados.</p>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

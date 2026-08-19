@@ -1,5 +1,6 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
 </head>
+
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -39,7 +41,7 @@
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
                     <li class="breadcrumb-item"><a href="/listarDisciplinas">Disciplinas</a></li>
-                    <li class="breadcrumb-item active" 
+                    <li class="breadcrumb-item active"
                         th:text="${disciplina != null and disciplina.id != null} ? 'Editar' : 'Nova Disciplina'"></li>
                 </ol>
             </nav>
@@ -48,22 +50,23 @@
             <div class="card fade-in" style="max-width: 600px; margin: 0 auto;">
                 <div class="card-header">
                     <h4 class="mb-0">
-                        <i class="fas fa-chalkboard"></i> 
-                        <span th:text="${disciplina != null and disciplina.id != null} ? 'Editar Disciplina' : 'Cadastrar Nova Disciplina'"></span>
+                        <i class="fas fa-chalkboard"></i>
+                        <span
+                            th:text="${disciplina != null and disciplina.id != null} ? 'Editar Disciplina' : 'Cadastrar Nova Disciplina'"></span>
                     </h4>
                 </div>
                 <div class="card-body">
                     <form th:method="post"
-                          th:action="${disciplina != null and disciplina.id != null} ? @{/atualizarDisciplina/{id}(id=${disciplina.id})} : @{/cadastrarDisciplina}">
-                        
+                        th:action="${disciplina != null and disciplina.id != null} ? @{/disciplina/{id}/atualizar(id=${disciplina.id})} : @{/cadastrarDisciplina}">
+
                         <!-- Código -->
                         <div class="form-group">
                             <label for="codigo" class="form-label">
                                 <span class="required">Código</span>
                             </label>
-                            <input type="text" class="form-control" id="codigo" name="codigo" 
-                                   th:value="${disciplina != null} ? ${disciplina.codigo} : ''"
-                                   placeholder="Digite o código da disciplina" required>
+                            <input type="text" class="form-control" id="codigo" name="codigo"
+                                th:value="${disciplina != null} ? ${disciplina.codigo} : ''"
+                                placeholder="Digite o código da disciplina" required>
                         </div>
 
                         <!-- Nome -->
@@ -71,17 +74,17 @@
                             <label for="nome" class="form-label">
                                 <span class="required">Nome</span>
                             </label>
-                            <input type="text" class="form-control" id="nome" name="nome" 
-                                   th:value="${disciplina != null} ? ${disciplina.nome} : ''"
-                                   placeholder="Digite o nome da disciplina" required>
+                            <input type="text" class="form-control" id="nome" name="nome"
+                                th:value="${disciplina != null} ? ${disciplina.nome} : ''"
+                                placeholder="Digite o nome da disciplina" required>
                         </div>
 
                         <!-- Descrição -->
                         <div class="form-group">
                             <label for="descricao" class="form-label">Descrição</label>
                             <textarea class="form-control" id="descricao" name="descricao" rows="4"
-                                      placeholder="Digite a descrição da disciplina"
-                                      th:text="${disciplina != null} ? ${disciplina.descricao} : ''"></textarea>
+                                placeholder="Digite a descrição da disciplina"
+                                th:text="${disciplina != null} ? ${disciplina.descricao} : ''"></textarea>
                         </div>
 
                         <!-- Carga Horária -->
@@ -89,9 +92,9 @@
                             <label for="cargaHoraria" class="form-label">
                                 <span class="required">Carga Horária (horas)</span>
                             </label>
-                            <input type="number" class="form-control" id="cargaHoraria" name="cargaHoraria" 
-                                   th:value="${disciplina != null} ? ${disciplina.cargaHoraria} : ''"
-                                   placeholder="Digite a carga horária" min="1" required>
+                            <input type="number" class="form-control" id="cargaHoraria" name="cargaHoraria"
+                                th:value="${disciplina != null} ? ${disciplina.cargaHoraria} : ''"
+                                placeholder="Digite a carga horária" min="1" required>
                         </div>
 
                         <!-- Actions -->
@@ -112,10 +115,11 @@
     <!-- Footer -->
     <footer>
         <div class="container-fluid">
-            <p>&copy; 2024 Sistema Acadêmico. Todos os direitos reservados.</p>
+            <p>&copy; 2026 Sistema Acadêmico. Todos os direitos reservados.</p>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

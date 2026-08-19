@@ -1,5 +1,6 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
 </head>
+
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -39,7 +41,7 @@
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
                     <li class="breadcrumb-item"><a href="/listarAlunos">Alunos</a></li>
-                    <li class="breadcrumb-item active" 
+                    <li class="breadcrumb-item active"
                         th:text="${aluno != null and aluno.id != null} ? 'Editar' : 'Novo Aluno'"></li>
                 </ol>
             </nav>
@@ -48,22 +50,23 @@
             <div class="card fade-in" style="max-width: 600px; margin: 0 auto;">
                 <div class="card-header">
                     <h4 class="mb-0">
-                        <i class="fas fa-user-plus"></i> 
-                        <span th:text="${aluno != null and aluno.id != null} ? 'Editar Aluno' : 'Cadastrar Novo Aluno'"></span>
+                        <i class="fas fa-user-plus"></i>
+                        <span
+                            th:text="${aluno != null and aluno.id != null} ? 'Editar Aluno' : 'Cadastrar Novo Aluno'"></span>
                     </h4>
                 </div>
                 <div class="card-body">
                     <form th:method="post"
-                          th:action="${aluno != null and aluno.id != null} ? @{/atualizarAluno/{id}(id=${aluno.id})} : @{/cadastrarAluno}">
-                        
+                        th:action="${aluno != null and aluno.id != null} ? @{/aluno/{id}/atualizar(id=${aluno.id})} : @{/cadastrarAluno}">
+
                         <!-- Nome -->
                         <div class="form-group">
                             <label for="nome" class="form-label">
                                 <span class="required">Nome</span>
                             </label>
-                            <input type="text" class="form-control" id="nome" name="nome" 
-                                   th:value="${aluno != null} ? ${aluno.nome} : ''"
-                                   placeholder="Digite o nome completo do aluno" required>
+                            <input type="text" class="form-control" id="nome" name="nome"
+                                th:value="${aluno != null} ? ${aluno.nome} : ''"
+                                placeholder="Digite o nome completo do aluno" required>
                             <small class="form-text">Digite o nome completo do aluno</small>
                         </div>
 
@@ -72,9 +75,9 @@
                             <label for="email" class="form-label">
                                 <span class="required">Email</span>
                             </label>
-                            <input type="email" class="form-control" id="email" name="email" 
-                                   th:value="${aluno != null} ? ${aluno.email} : ''"
-                                   placeholder="Digite o email do aluno" required>
+                            <input type="email" class="form-control" id="email" name="email"
+                                th:value="${aluno != null} ? ${aluno.email} : ''" placeholder="Digite o email do aluno"
+                                required>
                             <small class="form-text">Digite um email válido</small>
                         </div>
 
@@ -83,9 +86,8 @@
                             <label for="dataIngresso" class="form-label">
                                 <span class="required">Data de Ingresso</span>
                             </label>
-                            <input type="date" class="form-control" id="dataIngresso" name="dataIngresso" 
-                                   th:value="${aluno != null} ? ${aluno.dataIngresso} : ''"
-                                   required>
+                            <input type="date" class="form-control" id="dataIngresso" name="dataIngresso"
+                                th:value="${aluno != null} ? ${aluno.dataIngresso} : ''" required>
                             <small class="form-text">Selecione a data de ingresso do aluno</small>
                         </div>
 
@@ -96,10 +98,9 @@
                             </label>
                             <select class="form-select" id="cursoId" name="cursoId" required>
                                 <option value="">-- Selecionar curso --</option>
-                                <option th:each="curso : ${cursos}"
-                                        th:value="${curso.id}"
-                                        th:text="${curso.titulo} + ' (' + ${curso.quantSemestres} + ' semestres)'"
-                                        th:selected="${aluno != null and aluno.curso != null and aluno.curso.id == curso.id}">
+                                <option th:each="curso : ${cursos}" th:value="${curso.id}"
+                                    th:text="${curso.titulo} + ' (' + ${curso.quantSemestres} + ' semestres)'"
+                                    th:selected="${aluno != null and aluno.curso != null and aluno.curso.id == curso.id}">
                                 </option>
                             </select>
                             <small class="form-text">Selecione o curso do aluno</small>
@@ -123,10 +124,11 @@
     <!-- Footer -->
     <footer>
         <div class="container-fluid">
-            <p>&copy; 2024 Sistema Acadêmico. Todos os direitos reservados.</p>
+            <p>&copy; 2026 Sistema Acadêmico. Todos os direitos reservados.</p>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
