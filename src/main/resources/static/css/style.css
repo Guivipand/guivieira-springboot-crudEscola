@@ -23,9 +23,26 @@
     box-sizing: border-box;
 }
 
+/* ===========================
+   Cursor Pixelado (Retro 8-Bit)
+   =========================== */
+
+/* ===========================
+   Cursor Moderno e Elegante
+   =========================== */
+
+html, body, *, input, select, textarea {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24'%3E%3Cpath fill='%231b2a4a' stroke='%23ffffff' stroke-width='1.8' stroke-linejoin='round' d='M3 2l16 9-7 2-4 7-5-18z'/%3E%3C/svg%3E"), auto !important;
+}
+
+a, button, input[type="submit"], input[type="button"], select, label, .btn, .dashboard-card, .nav-link, .navbar-brand, .badge, .page-link {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24'%3E%3Cpath fill='%230984e3' stroke='%23ffffff' stroke-width='1.8' stroke-linejoin='round' d='M3 2l16 9-7 2-4 7-5-18z'/%3E%3C/svg%3E"), pointer !important;
+}
+
 html, body {
     height: 100%;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow-x: hidden;
 }
 
 body {
@@ -34,7 +51,50 @@ body {
     display: flex;
     flex-direction: column;
     color: var(--text-dark);
+    perspective: 1200px;
+    position: relative;
 }
+
+/* ===========================
+   Animação de Cadernos no Fundo
+   =========================== */
+
+#bg-notebooks-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.floating-notebook {
+    position: absolute;
+    bottom: -60px;
+    color: #0984e3;
+    animation: floatNotebooks linear infinite;
+    transform-style: preserve-3d;
+}
+
+@keyframes floatNotebooks {
+    0% {
+        transform: translateY(0) rotate(0deg) rotateY(0deg) scale(0.7);
+        opacity: 0;
+    }
+    15% {
+        opacity: 0.28;
+    }
+    85% {
+        opacity: 0.28;
+    }
+    100% {
+        transform: translateY(-115vh) rotate(360deg) rotateY(180deg) scale(1.15);
+        opacity: 0;
+    }
+}
+
 
 /* ===========================
    Navbar
@@ -44,12 +104,18 @@ body {
     background: linear-gradient(90deg, var(--primary-color) 0%, #0984e3 100%) !important;
     box-shadow: var(--shadow-lg);
     border-bottom: 3px solid #74b9ff;
+    position: relative;
+    z-index: 20;
 }
 
-.navbar-brand {
-    font-weight: 700;
-    font-size: 1.5rem;
-    letter-spacing: 1px;
+.navbar-brand i {
+    display: inline-block;
+    transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform-style: preserve-3d;
+}
+
+.navbar-brand:hover i {
+    transform: rotateY(360deg) translateZ(10px) scale(1.2);
 }
 
 .navbar-brand span {
@@ -78,7 +144,7 @@ body {
 
 main {
     flex: 1;
-    padding: 40px 20px;
+    padding: 20px 20px;
 }
 
 .container-main {
@@ -91,41 +157,42 @@ main {
    =========================== */
 
 .dashboard-container {
-    padding: 60px 0;
+    padding: 15px 0 5px 0;
 }
 
 .dashboard-title {
     text-align: center;
-    margin-bottom: 60px;
+    margin-bottom: 25px;
     color: var(--primary-color);
 }
 
 .dashboard-title h1 {
-    font-size: 3rem;
+    font-size: 2.2rem;
     font-weight: 700;
-    margin-bottom: 15px;
+    margin-bottom: 8px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .dashboard-title p {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     color: var(--text-muted);
 }
 
 .dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
-    margin-bottom: 40px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 25px;
+    margin-bottom: 25px;
+    perspective: 1000px;
 }
 
 .dashboard-card {
     background: white;
-    border-radius: 12px;
-    padding: 30px;
+    border-radius: 14px;
+    padding: 22px 18px;
     text-align: center;
-    box-shadow: var(--shadow);
-    transition: all 0.3s ease;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    transition: transform 0.15s ease-out, box-shadow 0.3s ease, border-color 0.3s ease, opacity 0.2s ease;
     border: 2px solid transparent;
     text-decoration: none;
     color: inherit;
@@ -133,30 +200,70 @@ main {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 200px;
+    min-height: 180px;
+    transform-style: preserve-3d;
+    overflow: hidden;
+    position: relative;
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24'%3E%3Cpath fill='%230984e3' stroke='%23ffffff' stroke-width='1.8' stroke-linejoin='round' d='M3 2l16 9-7 2-4 7-5-18z'/%3E%3C/svg%3E"), grab !important;
+    user-select: none;
+}
+
+.dashboard-card:active, .dashboard-card.dragging {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='7' fill='%2300b894' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E") 12 12, grabbing !important;
+}
+
+.dashboard-card.dragging {
+    opacity: 0.45;
+    transform: scale(0.95) !important;
+    border: 2px dashed var(--secondary-color) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.dashboard-card.drag-over {
+    border: 2px dashed var(--success-color) !important;
+    transform: scale(1.04) !important;
+    box-shadow: 0 12px 28px rgba(0, 184, 148, 0.35) !important;
 }
 
 .dashboard-card:hover {
-    transform: translateY(-8px);
-    box-shadow: var(--shadow-lg);
+    box-shadow: 0 16px 30px rgba(9, 132, 227, 0.2);
     border-color: var(--secondary-color);
 }
 
 .dashboard-card i {
     font-size: 3rem;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     color: var(--secondary-color);
+    transform: translateZ(15px);
+    transition: transform 0.3s ease;
+    filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.1));
+}
+
+.dashboard-card:hover i {
+    transform: translateZ(25px) scale(1.06);
 }
 
 .dashboard-card h3 {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     color: var(--primary-color);
-    margin-bottom: 10px;
+    margin-bottom: 8px;
+    transform: translateZ(10px);
+    transition: transform 0.3s ease;
+}
+
+.dashboard-card:hover h3 {
+    transform: translateZ(18px);
 }
 
 .dashboard-card p {
     color: var(--text-muted);
-    font-size: 0.95rem;
+    font-size: 0.9rem;
+    transform: translateZ(5px);
+    transition: transform 0.3s ease;
+}
+
+.dashboard-card:hover p {
+    transform: translateZ(12px);
 }
 
 /* ===========================
@@ -165,16 +272,15 @@ main {
 
 .card {
     border: none;
-    box-shadow: var(--shadow);
-    border-radius: 12px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+    border-radius: 14px;
     overflow: hidden;
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     margin-bottom: 20px;
 }
 
 .card:hover {
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-2px);
+    box-shadow: 0 15px 30px -5px rgba(27, 42, 74, 0.12);
 }
 
 .card-header {
@@ -235,11 +341,12 @@ main {
 }
 
 .table tbody tr {
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .table tbody tr:hover {
-    background-color: #f9f9f9;
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .table tbody tr:last-child td {
@@ -254,10 +361,16 @@ main {
     padding: 10px 20px;
     border-radius: 8px;
     font-weight: 500;
-    transition: all 0.3s ease;
+    transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.25s ease, background 0.3s ease;
     border: none;
     cursor: pointer;
     letter-spacing: 0.5px;
+    transform-style: preserve-3d;
+    position: relative;
+}
+
+.btn:active {
+    transform: translateY(2px) translateZ(-4px) scale(0.97) !important;
 }
 
 .btn-primary {
@@ -266,8 +379,8 @@ main {
 }
 
 .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(9, 132, 227, 0.4);
+    transform: translateY(-4px) translateZ(10px) rotateX(4deg);
+    box-shadow: 0 8px 18px rgba(9, 132, 227, 0.45);
     color: white !important;
     text-decoration: none;
 }
@@ -278,8 +391,8 @@ main {
 }
 
 .btn-success:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 184, 148, 0.4);
+    transform: translateY(-4px) translateZ(10px) rotateX(4deg);
+    box-shadow: 0 8px 18px rgba(0, 184, 148, 0.45);
     color: white !important;
     text-decoration: none;
 }
@@ -290,8 +403,8 @@ main {
 }
 
 .btn-danger:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(214, 48, 49, 0.4);
+    transform: translateY(-4px) translateZ(10px) rotateX(4deg);
+    box-shadow: 0 8px 18px rgba(214, 48, 49, 0.45);
     color: white !important;
     text-decoration: none;
 }
@@ -302,8 +415,8 @@ main {
 }
 
 .btn-warning:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(225, 112, 85, 0.4);
+    transform: translateY(-4px) translateZ(10px) rotateX(4deg);
+    box-shadow: 0 8px 18px rgba(225, 112, 85, 0.45);
     color: white !important;
     text-decoration: none;
 }
@@ -314,8 +427,8 @@ main {
 }
 
 .btn-info:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 151, 230, 0.4);
+    transform: translateY(-4px) translateZ(10px) rotateX(4deg);
+    box-shadow: 0 8px 18px rgba(0, 151, 230, 0.45);
     color: white !important;
     text-decoration: none;
 }
@@ -448,6 +561,13 @@ main {
     font-size: 0.85rem;
     font-weight: 600;
     display: inline-block;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+    transform-style: preserve-3d;
+}
+
+.badge:hover {
+    transform: translateY(-2px) translateZ(8px) scale(1.08);
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.18);
 }
 
 .badge-primary {
@@ -501,6 +621,14 @@ a.btn-link:hover {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
+    position: relative;
+    z-index: 10;
+}
+
+.action-buttons .btn {
+    pointer-events: auto;
+    position: relative;
+    z-index: 10;
 }
 
 /* ===========================
@@ -538,10 +666,12 @@ a.btn-link:hover {
 footer {
     background: var(--primary-color);
     color: white;
-    padding: 40px 20px;
+    padding: 18px 20px;
     margin-top: auto;
     text-align: center;
     box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 20;
 }
 
 footer p {
